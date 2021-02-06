@@ -136,9 +136,9 @@ def iterate_pagerank(corpus, damping_factor):
             newpr = part1 + damping_factor*part2
             pagerank[page] = newpr
             pagechange[page] = abs(newpr-oldpr)
-
+        smallestdelta = .0005
         for page3 in pagechange:
-            if smallestdelta > pagechange[page3]:
+            if smallestdelta < pagechange[page3]:
                 smallestdelta = pagechange[page3]
 
     return pagerank
