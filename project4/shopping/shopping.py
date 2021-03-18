@@ -3,6 +3,7 @@ import sys
 
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import confusion_matrix
 
 TEST_SIZE = 0.4
 
@@ -34,24 +35,13 @@ def main():
 def load_data(filename):
     with open(filename, newline='') as csvfile:
         datacsv = list(csv.reader(csvfile, delimiter=','))
-        # list to store the names of columns
-        list_of_column_names = []
-
-        # loop to iterate thorugh the rows of csv
-        for row in datacsv:
-
-            # adding the first row
-            list_of_column_names.append(row)
-
-            # breaking the loop after the
-            # first iteration itself
-            break
+        labels = []
         months = dict(Jan=1, Feb=2, Mar=3, Apr=4, May=5, June=6,
-                      Jul=7, Aug=8, Sep=9, Oct=10, Nov=11, Doc=12)
-        vtype = dict(New_Visitor=0, Returning_Visitor=1)
+                      Jul=7, Aug=8, Sep=9, Oct=10, Nov=11, Dec=12)
+        vtype = dict(New_Visitor=0, Returning_Visitor=1, Other=0)
         weekend = dict(FALSE=0, TRUE=1)
-        for row in datacsv[1:]:    # Skip the header row and convert first values to integers
-            print(f"{row[0]}")
+        evidence = datacsv[1:]          # Skip the header row
+        for row in evidence:
             row[0] = int(row[0])
             row[1] = float(row[1])
             row[2] = int(row[2])
@@ -69,7 +59,10 @@ def load_data(filename):
             row[14] = int(row[14])
             row[15] = vtype[row[15]]
             row[16] = weekend[row[16]]
+            labels.append(1 if row[17] == 'TRUE' else 0)
+            row.pop(17)
 
+    return(evidence, labels)
     """
     Load shopping data from a CSV file `filename` and convert into a list of
     evidence lists and a list of labels. Return a tuple (evidence, labels).
@@ -93,11 +86,12 @@ def load_data(filename):
         - 14 TrafficType, an integer
         - 15 VisitorType, an integer 0 (not returning) or 1 (returning)
         - 16 Weekend, an integer 0 (if false) or 1 (if true)
+        - 17 revenue
 
     labels should be the corresponding list of labels, where each label
     is 1 if Revenue is true, and 0 otherwise.
     """
-    raise NotImplementedError
+    #raise NotImplementedError
 
 
 def train_model(evidence, labels):
@@ -105,7 +99,10 @@ def train_model(evidence, labels):
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    raise NotImplementedError
+    model = KNeighborsClassifier(n_neighbors=1)
+    return(model.fit(evidence, labels))
+
+    #raise NotImplementedError
 
 
 def evaluate(labels, predictions):
@@ -123,7 +120,16 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    # Compute how well we performed
+
+    cm1 = confusion_matrix(labels, predictions)
+
+    sensitivity1 = cm1[0, 0]/(cm1[0, 0]+cm1[0, 1])
+
+    specificity1 = cm1[1, 1]/(cm1[1, 0]+cm1[1, 1])
+
+    return(sensitivity1, specificity1)
+    #raise NotImplementedError
 
 
 if __name__ == "__main__":
