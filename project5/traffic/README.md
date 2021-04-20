@@ -1,7 +1,4 @@
-| Syntax      | Description |
-| ----------- | ----------- |
-| Header      | Title       |
-| Paragraph   | Text        |
+
 
 | setup                         | accur | time.  |
 |------------------------------ |------ |------- |
