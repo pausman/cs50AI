@@ -3,7 +3,8 @@
 | Header      | Title       |
 | Paragraph   | Text        |
 
-|:------------------------------|:------|:-------|
+| setup                         | accur | time.  |
+|------------------------------ |------ |------- |
 |basic setup from lecture       | 0.0532| 40 sec |
 |basic plus poolsize 4,4        | 0.0565| 31 sec |
 |basic plus poolsize 1,1        | 0.0575| 95 sec |
